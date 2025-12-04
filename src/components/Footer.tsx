@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Github, Twitter, Linkedin, Mail, Facebook, Youtube } from 'lucide-react';
+import HeroBrand from './HeroBrand';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,30 +24,52 @@ export default function Footer() {
     visible: { opacity: 1, y: 0 },
   };
 
+  const textVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <footer className="relative w-full bg-slate-950 overflow-hidden">
-      {/* Large animated blur effects like reference */}
+      <HeroBrand />
+
+      {/* Large animated blur effects - Enhanced */}
       <motion.div
-        className="absolute -top-96 -right-96 w-96 h-96 rounded-full bg-blue-600 blur-3xl opacity-20"
+        className="absolute -top-96 -right-96 w-96 h-96 rounded-full bg-red-600 blur-3xl opacity-25"
         animate={{
-          y: [0, 30, 0],
-          x: [0, 20, 0],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -bottom-96 -left-96 w-96 h-96 rounded-full bg-cyan-500 blur-3xl opacity-20"
-        animate={{
-          y: [0, -30, 0],
-          x: [0, -20, 0],
+          y: [0, 40, 0],
+          x: [0, 30, 0],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute -bottom-96 -left-96 w-96 h-96 rounded-full bg-blue-600 blur-3xl opacity-25"
+        animate={{
+          y: [0, -40, 0],
+          x: [0, -30, 0],
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-cyan-500 blur-3xl opacity-15"
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.15, 0.25, 0.15],
+        }}
+        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Main Footer Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-8 py-20">
         <motion.div
-          className="grid grid-cols-5 gap-16 mb-16"
+          className="grid grid-cols-4 gap-12 mb-24"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -54,17 +77,7 @@ export default function Footer() {
         >
           {/* Brand Section */}
           <motion.div variants={itemVariants} className="col-span-1">
-            <motion.div
-              className="mb-6"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <h2 className="text-2xl font-bold">
-                <span className="bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                  AckMan
-                </span>
-              </h2>
-            </motion.div>
+
             <p className="text-slate-400 text-sm mb-8 leading-relaxed max-w-xs">
               Enterprise audit and compliance software built for modern teams. Smart solutions for complex audits.
             </p>
@@ -80,9 +93,9 @@ export default function Footer() {
                 <motion.a
                   key={i}
                   href={social.href}
-                  whileHover={{ scale: 1.15, rotate: 5 }}
+                  whileHover={{ scale: 1.2, rotate: 8 }}
                   whileTap={{ scale: 0.9 }}
-                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+                  className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors"
                   title={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -93,21 +106,26 @@ export default function Footer() {
 
           {/* Company */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h3 className="text-white font-semibold mb-6 text-xs uppercase tracking-widest">
               Company
             </h3>
-            <ul className="space-y-4">
-              {['About Us', 'Career', 'Case Studies', 'Contact Us'].map((link, idx) => (
+            <ul className="space-y-3">
+              {[
+                { name: 'About Us', href: '/about' },
+                { name: 'Career', href: '#' },
+                { name: 'Case Studies', href: '#' },
+                { name: 'Contact Us', href: '/contact' },
+              ].map((link, idx) => (
                 <motion.li
                   key={idx}
                   whileHover={{ x: 5 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   <Link
-                    href="#"
-                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                    href={link.href}
+                    className="text-slate-400 hover:text-red-500 text-sm transition-colors duration-300"
                   >
-                    {link}
+                    {link.name}
                   </Link>
                 </motion.li>
               ))}
@@ -116,21 +134,26 @@ export default function Footer() {
 
           {/* Support */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h3 className="text-white font-semibold mb-6 text-xs uppercase tracking-widest">
               Support
             </h3>
-            <ul className="space-y-4">
-              {['FAQ', 'Documentation', 'Tutorial', 'Support'].map((link, idx) => (
+            <ul className="space-y-3">
+              {[
+                { name: 'FAQ', href: '#' },
+                { name: 'Documentation', href: '#' },
+                { name: 'Tutorial', href: '#' },
+                { name: 'Support', href: '#' },
+              ].map((link, idx) => (
                 <motion.li
                   key={idx}
                   whileHover={{ x: 5 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   <Link
-                    href="#"
-                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                    href={link.href}
+                    className="text-slate-400 hover:text-red-500 text-sm transition-colors duration-300"
                   >
-                    {link}
+                    {link.name}
                   </Link>
                 </motion.li>
               ))}
@@ -139,21 +162,27 @@ export default function Footer() {
 
           {/* Legal Policies */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-white font-semibold mb-6 text-sm uppercase tracking-wider">
+            <h3 className="text-white font-semibold mb-6 text-xs uppercase tracking-widest">
               Legal Policies
             </h3>
-            <ul className="space-y-4">
-              {['Terms & Conditions', 'Privacy Policy', 'Refund Policy', 'GDPR Compliance', 'Affiliate Policy'].map((link, idx) => (
+            <ul className="space-y-3">
+              {[
+                { name: 'Terms & Conditions', href: '#' },
+                { name: 'Privacy Policy', href: '#' },
+                { name: 'Refund Policy', href: '#' },
+                { name: 'GDPR Compliance', href: '#' },
+                { name: 'Affiliate Policy', href: '#' },
+              ].map((link, idx) => (
                 <motion.li
                   key={idx}
                   whileHover={{ x: 5 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
                   <Link
-                    href="#"
-                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                    href={link.href}
+                    className="text-slate-400 hover:text-red-500 text-sm transition-colors duration-300"
                   >
-                    {link}
+                    {link.name}
                   </Link>
                 </motion.li>
               ))}
@@ -161,39 +190,42 @@ export default function Footer() {
           </motion.div>
         </motion.div>
 
-        {/* Divider */}
+        {/* Bottom Section with CTA */}
         <motion.div
-          className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent mb-16"
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        />
-
-        {/* Large Brand Name */}
-        <motion.div
-          className="mb-16"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h1 className="text-7xl md:text-8xl font-black text-red-500 leading-none tracking-tighter">
-            AckMan
-          </h1>
-        </motion.div>
-
-        {/* Bottom Section */}
-        <motion.div
-          className="text-center"
+          className="flex flex-col md:flex-row items-center justify-between gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
         >
           <motion.p variants={itemVariants} className="text-slate-400 text-sm">
-            Copyright © {currentYear} <span className="text-white font-semibold">AckMan</span> – Smart audit and compliance software for modern business
+            Copyright © {currentYear} <span className="text-white font-semibold">AckMan</span>. All rights reserved.
           </motion.p>
+
+          {/* Quick Links */}
+          <motion.div
+            className="flex gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            {[
+              { name: 'Login', href: '/login' },
+              { name: 'Dashboard', href: '/dashboard' },
+              { name: 'Features', href: '/features' },
+              { name: 'Pricing', href: '/pricing' },
+            ].map((link, idx) => (
+              <motion.div key={idx} variants={itemVariants}>
+                <Link
+                  href={link.href}
+                  className="text-slate-400 hover:text-red-500 text-xs uppercase tracking-widest transition-colors duration-300 font-medium"
+                >
+                  {link.name}
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
       </div>
     </footer>
