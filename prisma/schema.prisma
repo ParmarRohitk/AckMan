@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UploadBatch {
+  id        String   @id @default(uuid())
+  name      String
+  filename  String
+  createdAt DateTime @default(now())
+  records   AuditRecord[]
+}
+
+model AuditRecord {
+  id            String      @id @default(uuid())
+  uploadBatchId String
+  uploadBatch   UploadBatch @relation(fields: [uploadBatchId], references: [id])
+  data          Json
+  createdAt     DateTime    @default(now())
+}
+
+// Company & Organization
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     User[]
+  roles     Role[]
+}
+
+// User & Authentication
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  password     String   // Will be hashed
+  firstName    String
+  lastName     String
+  companyId    String
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  userRoles    UserRole[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([companyId])
+}
+
+// Roles: Admin, Manager, Employee, Accountant, Auditor, etc.
+model Role {
+  id          String   @id @default(uuid())
+  name        String   // "Admin", "Manager", "Employee", "Accountant", "Auditor"
+  description String?
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  permissions RolePermission[] @relation("RolePermissions")
+  userRoles   UserRole[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([name, companyId]) // Role name unique per company
+  @@index([companyId])
+}
+
+// Permissions: create_record, edit_record, delete_record, view_reports, manage_users, etc.
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   // "create_audit", "edit_record", "delete_record", "view_reports", "manage_users"
+  description String?
+  roles       RolePermission[] @relation("PermissionRoles")
+  createdAt   DateTime @default(now())
+
+  @@unique([name])
+}
+
+// Junction table: User -> Roles
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+}
+
+// Junction table: Role -> Permissions
+model RolePermission {
+  id           String   @id @default(uuid())
+  roleId       String
+  role         Role     @relation("RolePermissions", fields: [roleId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation("PermissionRoles", fields: [permissionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+// Session/Token (optional, for auth token management)
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

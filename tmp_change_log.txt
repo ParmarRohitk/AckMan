@@ -1,0 +1,1 @@
+Applying visual polish: background gradient shapes, animated heading, CTA animations, stat styling, blob rotation in src/app/page.tsx
